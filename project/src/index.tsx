@@ -6,8 +6,13 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
+
+enum Settings {
+  offersCount = 5
+}
+
 root.render(
   <React.StrictMode>
-    <App />
+    <App offersCount={Settings.offersCount} />
   </React.StrictMode>,
 );
