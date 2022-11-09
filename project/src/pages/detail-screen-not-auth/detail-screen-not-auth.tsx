@@ -1,3 +1,6 @@
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const';
+
 function DetailScreenNotAuth () {
   return (
     <div className="page">
@@ -26,7 +29,7 @@ function DetailScreenNotAuth () {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link" href="main.html">
+              <Link className="header__logo-link" to={AppRoute.Root}>
                 <img
                   className="header__logo"
                   src="img/logo.svg"
@@ -34,7 +37,7 @@ function DetailScreenNotAuth () {
                   width={81}
                   height={41}
                 />
-              </a>
+              </Link>
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
