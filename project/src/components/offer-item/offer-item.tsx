@@ -1,7 +1,14 @@
 
-function OfferItem () {
+import { Offer } from '../../types/offer';
+import React from 'react';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const';
+
+function OfferItem (props:Offer) {
+  const [activeOffer, setActiveOffer] = React.useState(props.id);
+
   return (
-    <article className="cities__card place-card">
+    <article className="cities__card place-card" onMouseOver={() => {setActiveOffer(activeOffer);}}>
       <div className="place-card__mark">
         <span>Premium</span>
       </div>
@@ -30,9 +37,9 @@ function OfferItem () {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">
-          Beautiful &amp; luxurious apartment at great location
-          </a>
+          <Link to={AppRoute.Room}>
+            {props.title}
+          </Link>
         </h2>
         <p className="place-card__type">Apartment</p>
       </div>

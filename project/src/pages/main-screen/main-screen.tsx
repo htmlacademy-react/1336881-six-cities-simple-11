@@ -1,10 +1,12 @@
 import OfferItem from '../../components/offer-item/offer-item';
+import {Offer} from '../../types/offer';
 
 type MainScreenProps = {
   offersCount: number;
+  offerCards: Offer[];
 }
 
-function MainScreen ({offersCount}: MainScreenProps): JSX.Element {
+function MainScreen ({offersCount, offerCards}: MainScreenProps): JSX.Element {
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -132,11 +134,12 @@ function MainScreen ({offersCount}: MainScreenProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <OfferItem/>
-                <OfferItem/>
-                <OfferItem/>
-                <OfferItem/>
-                <OfferItem/>
+
+                {
+                  offerCards.map((offer) => (
+                    <OfferItem key={offer.id} {...offer}/>
+                  ))
+                }
               </div>
             </section>
             <div className="cities__right-section">
