@@ -6,4 +6,9 @@ export type Offer = {
   title: string;
   type: string;
   rating: number;
+  location: {
+    latitude: number;
+    longitude: number;
+    zoom: number;
+  };
 }

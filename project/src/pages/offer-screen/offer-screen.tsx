@@ -3,7 +3,7 @@ import {AppRoute} from '../../const';
 
 import OfferComment from '../../components/offer-comment/offer-comment';
 
-function DetailScreenAuth () {
+function OfferScreen () {
   return (
     <div className="page">
       <div style={{ display: 'none' }}>
@@ -336,4 +336,4 @@ function DetailScreenAuth () {
   );
 }
 
-export default DetailScreenAuth;
+export default OfferScreen;

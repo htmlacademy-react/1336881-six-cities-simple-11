@@ -1,7 +1,7 @@
 
-import { Stars} from '../../types/commentStars';
+import { Stars} from '../../types/rating-star';
 
-const CommentStars = ({title, id, onChange}:Stars) => (
+const RatingStar = ({title, id, onChange}:Stars) => (
   <>
     <input
       onChange = {onChange}
@@ -22,4 +22,4 @@ const CommentStars = ({title, id, onChange}:Stars) => (
   </>
 );
 
-export default CommentStars;
+export default RatingStar;
