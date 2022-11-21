@@ -1,5 +1,8 @@
 import OfferItem from '../../components/offer-item/offer-item';
 import {Offer} from '../../types/offer';
+import Map from '../../components/main-map/main-map';
+import {CITY} from '../../mocks/city';
+
 
 type MainScreenProps = {
   offersCount: number;
@@ -143,7 +146,7 @@ function MainScreen ({offersCount, offerCards}: MainScreenProps): JSX.Element {
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map" />
+              <Map city={CITY} points={offerCards} selectedPoint={offerCards[0]}></Map>
             </div>
           </div>
         </div>

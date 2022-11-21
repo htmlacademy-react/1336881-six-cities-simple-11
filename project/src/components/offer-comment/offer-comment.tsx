@@ -1,6 +1,6 @@
 import React from 'react';
-import CommentStars from '../comment-stars/comment-stars';
-import { Grade } from '../../types/commentStars';
+import RatingStar from '../rating-star/rating-star';
+import { Grade } from '../../types/rating-star';
 
 function OfferComment() {
 
@@ -19,11 +19,11 @@ function OfferComment() {
   Your review
       </label>
       <div className="reviews__rating-form form__rating">
-        <CommentStars title={Grade.star1} id={1} onChange={fieldChangeHandle}/>
-        <CommentStars title={Grade.star2} id={2} onChange={fieldChangeHandle}/>
-        <CommentStars title={Grade.star3} id={3} onChange={fieldChangeHandle}/>
-        <CommentStars title={Grade.star4} id={4} onChange={fieldChangeHandle}/>
-        <CommentStars title={Grade.star5} id={5} onChange={fieldChangeHandle}/>
+        <RatingStar title={Grade.star1} id={1} onChange={fieldChangeHandle}/>
+        <RatingStar title={Grade.star2} id={2} onChange={fieldChangeHandle}/>
+        <RatingStar title={Grade.star3} id={3} onChange={fieldChangeHandle}/>
+        <RatingStar title={Grade.star4} id={4} onChange={fieldChangeHandle}/>
+        <RatingStar title={Grade.star5} id={5} onChange={fieldChangeHandle}/>
       </div>
       <textarea onChange={fieldChangeHandle} value={formData.comment}
         className="reviews__textarea form__textarea"
