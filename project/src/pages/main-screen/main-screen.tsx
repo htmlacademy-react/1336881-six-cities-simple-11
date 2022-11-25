@@ -1,15 +1,21 @@
-import OfferItem from '../../components/offer-item/offer-item';
-import {Offer} from '../../types/offer';
 import Map from '../../components/main-map/main-map';
 import {CITY} from '../../mocks/city';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { useAppDispath } from '../../hooks/useAppDispatch';
+import { useEffect } from 'react';
+import { getOffersAction } from '../../store/actions';
+import OffersList from '../../components/offers-list/offers-list';
 
 
-type MainScreenProps = {
-  offersCount: number;
-  offerCards: Offer[];
-}
+function MainScreen (): JSX.Element {
 
-function MainScreen ({offersCount, offerCards}: MainScreenProps): JSX.Element {
+  const { offers } = useAppSelector((state) => state);
+  const dispath = useAppDispath();
+
+  useEffect(() => {
+    dispath(getOffersAction());
+  }, []);
+
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -137,16 +143,11 @@ function MainScreen ({offersCount, offerCards}: MainScreenProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-
-                {
-                  offerCards.map((offer) => (
-                    <OfferItem key={offer.id} {...offer}/>
-                  ))
-                }
+                <OffersList></OffersList>
               </div>
             </section>
             <div className="cities__right-section">
-              <Map city={CITY} points={offerCards} selectedPoint={offerCards[0]}></Map>
+              <Map city={CITY} points={offers} selectedPoint={offers[0]}></Map>
             </div>
           </div>
         </div>

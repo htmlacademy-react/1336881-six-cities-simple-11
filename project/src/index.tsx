@@ -1,19 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
-import {offerCards} from './mocks/offers';
-import {reviewItems} from './mocks/reviews';
+import { Provider } from 'react-redux';
+import { store } from './store';
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
 
-enum Settings {
-  offersCount = 5
-}
-
 root.render(
   <React.StrictMode>
-    <App offersCount={Settings.offersCount} offerCards={offerCards} reviewItems={reviewItems} />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
 );
