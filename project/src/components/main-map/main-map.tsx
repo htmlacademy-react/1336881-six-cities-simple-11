@@ -8,28 +8,28 @@ import { Offer } from '../../types/offer';
 const URL_MARKER_DEFAULT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
 const URL_MARKER_CURRENT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
 
-type mapProps = {
+const defaultCustomIcon = leaflet.icon({
+  iconUrl: URL_MARKER_DEFAULT,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
+const currentCustomIcon = leaflet.icon({
+  iconUrl: URL_MARKER_CURRENT,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
+type MapProps = {
   city: City;
   points: Offer[];
   selectedPoint: Offer;
 };
 
 
-function Map({city, points, selectedPoint}: mapProps) {
+function Map({city, points, selectedPoint}: MapProps) {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
-
-  const defaultCustomIcon = leaflet.icon({
-    iconUrl: URL_MARKER_DEFAULT,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
-  const currentCustomIcon = leaflet.icon({
-    iconUrl: URL_MARKER_CURRENT,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
 
   useEffect(() => {
     if (map) {
@@ -37,7 +37,7 @@ function Map({city, points, selectedPoint}: mapProps) {
         leaflet
           .marker({
             lat: point.location.latitude,
-            lng: point.location.latitude,
+            lng: point.location.longitude,
           }, {
             icon: (point.title === selectedPoint.title)
               ? currentCustomIcon
@@ -51,7 +51,6 @@ function Map({city, points, selectedPoint}: mapProps) {
 
   return (
     <div
-      style={{height: '500px'}}
       ref={mapRef}
       className={'cities__map map'}
     >
