@@ -16,7 +16,7 @@ function OfferItem (props:Offer) {
         <a href="#">
           <img
             className="place-card__image"
-            src="img/apartment-01.jpg"
+            src={props.previewImage}
             width={260}
             height={200}
             alt="Place image"
