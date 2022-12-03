@@ -1,18 +1,14 @@
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { useAppDispath } from '../../hooks/useAppDispatch';
-import { getOffersAction } from '../../store/actions';
-import { useEffect } from 'react';
 import OfferItem from '../../components/offer-item/offer-item';
+import Spiner from '../spiner/spiner';
 
 const OffersList = ():JSX.Element => {
 
-  const { offers } = useAppSelector((state) => state);
-  const dispath = useAppDispath();
+  const { offers, isLoading } = useAppSelector((state) => state);
 
-  useEffect(() => {
-    dispath(getOffersAction());
-  }, []);
-
+  if(isLoading){
+    return <Spiner/>;
+  }
 
   return (
     <>
