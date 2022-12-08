@@ -1,4 +1,13 @@
+import { useState, useRef } from 'react';
+
 function LoginScreen () {
+
+  const [emailValue, setEmailValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
+
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
   return (
     <div className="page page--gray page--login">
       <div style={{ display: 'none' }}>
@@ -51,6 +60,9 @@ function LoginScreen () {
                   type="email"
                   name="email"
                   placeholder="Email"
+                  ref={emailRef}
+                  value={emailValue}
+                  onChange = {(evt) => setEmailValue(evt.target.value)}
                   required
                 />
               </div>
@@ -61,6 +73,9 @@ function LoginScreen () {
                   type="password"
                   name="password"
                   placeholder="Password"
+                  ref={passwordRef}
+                  value={passwordValue}
+                  onChange = {(evt) => setPasswordValue(evt.target.value)}
                   required
                 />
               </div>

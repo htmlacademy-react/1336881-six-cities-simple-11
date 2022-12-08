@@ -1,19 +1,27 @@
 
 import { Offer } from '../../types/offer';
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const';
+import {Link, useNavigate} from 'react-router-dom';
+import { useAppDispath } from '../../hooks/useAppDispatch';
+import { handleActiveCardAction} from '../../store/actions';
 
 function OfferItem (props:Offer) {
-  const [activeOffer, setActiveOffer] = React.useState(props.id);
+  const navigate = useNavigate();
+
+  const clickHandler = () => {
+    window.scrollTo(0,0);
+    navigate(`/offer/${props.id}`);
+  };
+
+  const dispath = useAppDispath();
+
+  const getRating = (num:number) => `${Number(num.toString()[0] + num.toString()[2]) * 2}%`;
 
   return (
-    <article className="cities__card place-card" onMouseOver={() => {setActiveOffer(activeOffer);}}>
-      <div className="place-card__mark">
-        <span>Premium</span>
-      </div>
+    <article className="cities__card place-card" onMouseOver={() => {dispath(handleActiveCardAction(props));}}>
+      {props.isPremium ? <div className="place-card__mark"> <span>Premium</span></div> : null}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <div onClick={clickHandler}>
           <img
             className="place-card__image"
             src={props.previewImage}
@@ -21,27 +29,27 @@ function OfferItem (props:Offer) {
             height={200}
             alt="Place image"
           />
-        </a>
+        </div>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">€120</b>
+            <b className="place-card__price-value">{props.price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: '80%' }} />
-            <span className="visually-hidden">Rating</span>
+            <span style={{ width: `${getRating(props.rating)}` }} />
+            <span className="visually-hidden">{props.rating}</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={AppRoute.Room}>
+          <Link to={`/offer/${props.id}`}>
             {props.title}
           </Link>
         </h2>
-        <p className="place-card__type">Apartment</p>
+        <p className="place-card__type">{props.type}</p>
       </div>
     </article>
   );
