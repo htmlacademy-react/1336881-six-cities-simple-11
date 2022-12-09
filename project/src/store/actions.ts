@@ -72,7 +72,7 @@ export const checkAuthAction = createAsyncThunk<void, undefined, Tthunk>('user/c
 export const loginAction = createAsyncThunk<void, User, Tthunk>('user/checkAuthAction', async ({email, password},{dispatch, extra: api}) => {
   const {data} = await api.post<User>('/login', {email, password});
   dispatch(handleUserDataAction(data));
-  saveToken(data.token);
+  saveToken(data.token || '');
   dispatch(handleLoginAction(AuthorizationStatus.Auth));
 });
 

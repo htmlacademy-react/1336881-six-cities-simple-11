@@ -1,12 +1,23 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { loginAction } from '../../store/actions';
+import { useAppDispath } from '../../hooks/useAppDispatch';
+import Header from '../../components/header/header';
 
 function LoginScreen () {
+
+  const dispath = useAppDispath();
 
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+
+  const submitFormHandler = (e:React.SyntheticEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    dispath(loginAction({email: emailValue, password: passwordValue}));
+  };
+
 
   return (
     <div className="page page--gray page--login">
@@ -31,23 +42,7 @@ function LoginScreen () {
           </symbol>
         </svg>
       </div>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <a className="header__logo-link" href="main.html">
-                <img
-                  className="header__logo"
-                  src="img/logo.svg"
-                  alt="6 cities logo"
-                  width={81}
-                  height={41}
-                />
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header/>
       <main className="page__main page__main--login">
         <div className="page__login-container container">
           <section className="login">
@@ -79,7 +74,7 @@ function LoginScreen () {
                   required
                 />
               </div>
-              <button className="login__submit form__submit button" type="submit">
+              <button className="login__submit form__submit button" onClick={submitFormHandler} type="submit">
             Sign in
               </button>
             </form>
