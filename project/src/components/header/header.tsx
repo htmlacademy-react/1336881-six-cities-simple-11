@@ -15,6 +15,7 @@ function Header() {
   const logoutHandler = (e:React.SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     dispath(logoutAction());
+
   };
 
   return (
