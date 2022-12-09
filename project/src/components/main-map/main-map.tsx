@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import useMap from '../../hooks/useMap';
 import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
+import { useAppSelector } from '../../hooks/useAppSelector';
 
 const URL_MARKER_DEFAULT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
 const URL_MARKER_CURRENT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
@@ -23,13 +24,15 @@ const currentCustomIcon = leaflet.icon({
 type MapProps = {
   city: City;
   points: Offer[];
-  selectedPoint: Offer;
+  isMainMap: boolean;
 };
 
 
-function Map({city, points, selectedPoint}: MapProps) {
+function Map({city, points, isMainMap}: MapProps) {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
+
+  const { activeCard } = useAppSelector((state) => state);
 
   useEffect(() => {
     if (map) {
@@ -39,20 +42,20 @@ function Map({city, points, selectedPoint}: MapProps) {
             lat: point.location.latitude,
             lng: point.location.longitude,
           }, {
-            icon: (point.title === selectedPoint.title)
+            icon: (activeCard && point.id === activeCard.id && isMainMap)
               ? currentCustomIcon
               : defaultCustomIcon,
           })
           .addTo(map);
       });
     }
-  }, [map, points, selectedPoint]);
+  }, [map, points, activeCard]);
 
 
   return (
     <div
       ref={mapRef}
-      className={'cities__map map'}
+      className={`map ${isMainMap ? 'cities__map' : 'property__map'}`}
     >
     </div>
   );
