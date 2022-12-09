@@ -24,4 +24,5 @@ export const createApi = () => {
       }
     }
   );
+  return api;
 };
