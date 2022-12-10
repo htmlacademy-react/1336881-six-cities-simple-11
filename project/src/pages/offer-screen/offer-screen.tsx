@@ -1,25 +1,28 @@
-import {Link} from 'react-router-dom';
+import {Link, Navigate} from 'react-router-dom';
 import {AppRoute} from '../../const';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispath } from '../../hooks/useAppDispatch';
 import { useEffect } from 'react';
-import { getNearOffersAction } from '../../store/actions';
+import { getCommentsAction, getNearOffersAction } from '../../store/actions';
 import OfferItem from '../../components/offer-item/offer-item';
 
 import OfferComment from '../../components/offer-comment/offer-comment';
 import Map from '../../components/main-map/main-map';
+import ReviewsItem from '../../components/reviews-item/reviews-item';
+import Header from '../../components/header/header';
 
 function OfferScreen () {
   const params = useParams<{id: string}>();
 
-  const { offers, nearOffer } = useAppSelector((state) => state);
+  const { offers, nearOffer, comments } = useAppSelector((state) => state);
   const currentOffer = offers.find((el) => Number(params.id) === el.id);
   const dispath = useAppDispath();
 
   useEffect(() => {
     if(params.id){
       dispath(getNearOffersAction(params.id));
+      dispath(getCommentsAction(params.id));
     }
   }, []);
 
@@ -49,40 +52,7 @@ function OfferScreen () {
             </symbol>
           </svg>
         </div>
-        <header className="header">
-          <div className="container">
-            <div className="header__wrapper">
-              <div className="header__left">
-                <Link className="header__logo-link" to={AppRoute.Root}>
-                  <img
-                    className="header__logo"
-                    src="img/logo.svg"
-                    alt="6 cities logo"
-                    width={81}
-                    height={41}
-                  />
-                </Link>
-              </div>
-              <nav className="header__nav">
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <div className="header__nav-profile">
-                      <div className="header__avatar-wrapper user__avatar-wrapper" />
-                      <span className="header__user-name user__name">
-                  Oliver.conner@gmail.com
-                      </span>
-                    </div>
-                  </li>
-                  <li className="header__nav-item">
-                    <a className="header__nav-link" href="#">
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </header>
+        <Header/>
         <main className="page__main page__main--property">
           <section className="property">
             <div className="property__gallery-container container">
@@ -168,36 +138,9 @@ function OfferScreen () {
               Reviews · <span className="reviews__amount">1</span>
                   </h2>
                   <ul className="reviews__list">
-                    <li className="reviews__item">
-                      <div className="reviews__user user">
-                        <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                          <img
-                            className="reviews__avatar user__avatar"
-                            src="img/avatar-max.jpg"
-                            width={54}
-                            height={54}
-                            alt="Reviews avatar"
-                          />
-                        </div>
-                        <span className="reviews__user-name">Max</span>
-                      </div>
-                      <div className="reviews__info">
-                        <div className="reviews__rating rating">
-                          <div className="reviews__stars rating__stars">
-                            <span style={{ width: '80%' }} />
-                            <span className="visually-hidden">Rating</span>
-                          </div>
-                        </div>
-                        <p className="reviews__text">
-                    A quiet cozy and picturesque that hides behind a a river by
-                    the unique lightness of Amsterdam. The building is green and
-                    from 18th century.
-                        </p>
-                        <time className="reviews__time" dateTime="2019-04-24">
-                    April 2019
-                        </time>
-                      </div>
-                    </li>
+                    {comments.map((comment) => (
+                      <ReviewsItem {...comment} key={comment.id}></ReviewsItem>
+                    ))}
                   </ul>
                   <OfferComment />
                 </section>
@@ -224,7 +167,7 @@ function OfferScreen () {
       </div>
     );
   }
-  return null;
+  return <Navigate to={AppRoute.notFound}/>;
 }
 
 export default OfferScreen;

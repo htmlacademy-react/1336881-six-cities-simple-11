@@ -3,6 +3,7 @@ import { CITY } from '../mocks/city';
 import { reviewItems } from '../mocks/reviews';
 import { AuthorizationStatus } from '../types/auth';
 import { City } from '../types/city';
+import { Comment } from '../types/comment';
 import { Offer } from '../types/offer';
 import { Review } from '../types/review';
 import { User } from '../types/user';
@@ -17,6 +18,8 @@ import { changeCityAction,
   handleSortPopularAction,
   handleLoginAction,
   handleUserDataAction,
+  handleGetCommentsAction,
+  handleAddCommentsAction,
 } from './actions';
 
 type InitialState = {
@@ -29,6 +32,7 @@ type InitialState = {
   popularOffers: Offer[];
   authorizationStatus: AuthorizationStatus;
   user: User | null;
+  comments: Comment[];
 };
 
 const initialState: InitialState = {
@@ -41,16 +45,18 @@ const initialState: InitialState = {
   popularOffers: [],
   authorizationStatus: AuthorizationStatus.NoAuth,
   user: null,
+  comments: [],
 };
 
 export const mainReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(changeCityAction, (state, action) => {
       state.currentCity = action.payload;
+      state.offers = state.popularOffers.filter((el) => el.city.name === action.payload.name);
     })
     .addCase(handleOffersAction, (state, action) => {
       state.offers = action.payload.filter((el) => el.city.name === state.currentCity.name);
-      state.popularOffers = state.offers;
+      state.popularOffers = action.payload;
     })
     .addCase(isLoadingAction, (state) => {
       state.isLoading = !state.isLoading;
@@ -71,12 +77,18 @@ export const mainReducer = createReducer(initialState, (builder) => {
       state.offers.sort((b, a) => a.rating - b.rating);
     })
     .addCase(handleSortPopularAction, (state) => {
-      state.offers = state.popularOffers;
+      state.offers = state.popularOffers.filter((el) => el.city.name === state.currentCity.name);
     })
     .addCase(handleLoginAction, (state, action) => {
       state.authorizationStatus = action.payload;
     })
     .addCase(handleUserDataAction, (state, action) => {
       state.user = action.payload;
+    })
+    .addCase(handleGetCommentsAction, (state, action) => {
+      state.comments = action.payload;
+    })
+    .addCase(handleAddCommentsAction, (state, action) => {
+      state.comments = action.payload;
     });
 });

@@ -1,7 +1,7 @@
 
 import { Stars} from '../../types/rating-star';
 
-const RatingStar = ({title, id, onChange}:Stars) => (
+const RatingStar = ({title, id, currentRating, onChange}:Stars) => (
   <>
     <input
       onChange = {onChange}
@@ -9,6 +9,7 @@ const RatingStar = ({title, id, onChange}:Stars) => (
       name="rating"
       id={`${id}-star`}
       type="radio"
+      checked={currentRating === id}
     />
     <label
       htmlFor={`${id}-star`}

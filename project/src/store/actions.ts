@@ -7,6 +7,7 @@ import { Offer } from '../types/offer';
 import { AuthorizationStatus } from '../types/auth';
 import { dropToken, saveToken } from '../services/token';
 import { User } from '../types/user';
+import { Comment } from '../types/comment';
 
 export const isLoadingAction = createAction('loading/isLoadingAction');
 
@@ -37,6 +38,10 @@ export const handleSortPopularAction = createAction('offer/handleSortPopularActi
 export const handleLoginAction = createAction('user/handleSortPopularAction', (value:AuthorizationStatus) => ({payload:value}));
 
 export const handleUserDataAction = createAction('user/handleUserDataAction', (value: User | null) => ({payload:value}));
+
+export const handleGetCommentsAction = createAction('comments/handleGetCommentsAction', (value: Comment[]) => ({payload:value}));
+
+export const handleAddCommentsAction = createAction('comments/handleAddCommentsAction', (value: Comment[]) => ({payload:value}));
 
 
 type Tthunk = {
@@ -82,4 +87,20 @@ export const logoutAction = createAsyncThunk<void, undefined, Tthunk>('user/chec
   dropToken();
   dispatch(handleLoginAction(AuthorizationStatus.NoAuth));
 });
+
+
+export const getCommentsAction = createAsyncThunk<void, string, Tthunk>('comments/getCommentsAction', async (id,{dispatch, extra: api}) => {
+  const {data} = await api.get<Comment[]>(`/comments/${id}`);
+  dispatch(handleGetCommentsAction(data));
+});
+
+
+export const addCommentsAction = createAsyncThunk<
+  void,
+  {id:string; comment:string; rating:number},
+  Tthunk>('comments/addCommentsAction',
+    async ({id, comment, rating},{dispatch, extra: api}) => {
+      const {data} = await api.post<Comment[]>(`/comments/${id}`, {comment, rating});
+      dispatch(handleAddCommentsAction(data));
+    });
 

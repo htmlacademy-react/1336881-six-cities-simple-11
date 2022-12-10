@@ -9,5 +9,6 @@ export enum Grade {
 export type Stars = {
   title: Grade;
   id: number;
+  currentRating: number;
   onChange: (evt:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
 }
