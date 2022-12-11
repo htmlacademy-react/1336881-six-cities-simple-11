@@ -1,4 +1,4 @@
-import {Link, Navigate} from 'react-router-dom';
+import {Navigate} from 'react-router-dom';
 import {AppRoute} from '../../const';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/useAppSelector';
@@ -6,16 +6,19 @@ import { useAppDispath } from '../../hooks/useAppDispatch';
 import { useEffect } from 'react';
 import { getCommentsAction, getNearOffersAction } from '../../store/actions';
 import OfferItem from '../../components/offer-item/offer-item';
+import { AuthorizationStatus } from '../../types/auth';
 
 import OfferComment from '../../components/offer-comment/offer-comment';
 import Map from '../../components/main-map/main-map';
 import ReviewsItem from '../../components/reviews-item/reviews-item';
 import Header from '../../components/header/header';
+import Spiner from '../../components/spiner/spiner';
+import { getRating } from '../../utils';
 
 function OfferScreen () {
   const params = useParams<{id: string}>();
 
-  const { offers, nearOffer, comments } = useAppSelector((state) => state);
+  const { offers, nearOffer, comments, authorizationStatus, isLoading } = useAppSelector((state) => state);
   const currentOffer = offers.find((el) => Number(params.id) === el.id);
   const dispath = useAppDispath();
 
@@ -26,8 +29,9 @@ function OfferScreen () {
     }
   }, []);
 
-  const getRating = (num:number) => `${Number(num.toString()[0] + num.toString()[2]) * 2}%`;
-
+  if(isLoading){
+    return <Spiner/>;
+  }
   if(currentOffer) {
     return (
       <div className="page">
@@ -89,10 +93,10 @@ function OfferScreen () {
                     {currentOffer.type}
                   </li>
                   <li className="property__feature property__feature--bedrooms">
-                    {currentOffer.bedrooms} Bedrooms
+                    {currentOffer.bedrooms} Bedroom{`${currentOffer.bedrooms === 1 ? '' : 's'}`}
                   </li>
                   <li className="property__feature property__feature--adults">
-                    {`Max ${currentOffer.maxAdults} adults`}
+                    {`Max ${currentOffer.maxAdults} adult${currentOffer.bedrooms === 1 ? '' : 's'}`}
                   </li>
                 </ul>
                 <div className="property__price">
@@ -135,14 +139,14 @@ function OfferScreen () {
                 </div>
                 <section className="property__reviews reviews">
                   <h2 className="reviews__title">
-              Reviews · <span className="reviews__amount">1</span>
+              Reviews · <span className="reviews__amount">{comments.length}</span>
                   </h2>
                   <ul className="reviews__list">
-                    {comments.map((comment) => (
+                    {comments.slice(0, 9).map((comment) => (
                       <ReviewsItem {...comment} key={comment.id}></ReviewsItem>
                     ))}
                   </ul>
-                  <OfferComment />
+                  {authorizationStatus === AuthorizationStatus.Auth ? <OfferComment /> : null}
                 </section>
               </div>
             </div>
@@ -167,7 +171,7 @@ function OfferScreen () {
       </div>
     );
   }
-  return <Navigate to={AppRoute.notFound}/>;
+  return <Navigate to={AppRoute.NotFound}/>;
 }
 
 export default OfferScreen;

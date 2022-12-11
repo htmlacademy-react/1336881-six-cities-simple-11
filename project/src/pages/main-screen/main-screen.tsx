@@ -1,5 +1,4 @@
 import Map from '../../components/main-map/main-map';
-import {CITY} from '../../mocks/city';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import OffersList from '../../components/offers-list/offers-list';
 import SortOffers from '../../components/sort-offers/sort-offers';
@@ -9,7 +8,7 @@ import Tabs from '../../components/tabs/tabs';
 
 function MainScreen (): JSX.Element {
 
-  const { offers } = useAppSelector((state) => state);
+  const { offers, currentCity } = useAppSelector((state) => state);
 
   return (
     <>
@@ -42,14 +41,14 @@ function MainScreen (): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">312 places to stay in Amsterdam</b>
+              <b className="places__found">{offers.length} places to stay in {currentCity.name}</b>
               <SortOffers/>
               <div className="cities__places-list places__list tabs__content">
                 <OffersList></OffersList>
               </div>
             </section>
             <div className="cities__right-section">
-              <Map city={CITY} points={offers} isMainMap></Map>
+              <Map city={currentCity} points={offers} isMainMap></Map>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { Comment } from '../../types/comment';
-const getRating = (num:number) => `${Number(num.toString()[0] + num.toString()[2]) * 2}%`;
+import { getRating } from '../../utils';
 
 const ReviewsItem = ({comment, rating, date, user}:Comment):JSX.Element => (
   <li className="reviews__item">
@@ -18,7 +18,7 @@ const ReviewsItem = ({comment, rating, date, user}:Comment):JSX.Element => (
     <div className="reviews__info">
       <div className="reviews__rating rating">
         <div className="reviews__stars rating__stars">
-          <span style={{ width: getRating(rating) }} />
+          <span style={{ width: `${getRating(rating)}%` }} />
           <span className="visually-hidden">{rating}</span>
         </div>
       </div>

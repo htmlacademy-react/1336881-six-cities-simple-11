@@ -4,6 +4,7 @@ import { Grade } from '../../types/rating-star';
 import { useAppDispath } from '../../hooks/useAppDispatch';
 import { addCommentsAction } from '../../store/actions';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function OfferComment() {
 
@@ -24,6 +25,10 @@ function OfferComment() {
 
   const submitFormHandler = (e:React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if(formData.comment.length < 50) {
+      toast.warn('comment length have to be 50 at liast');
+      return;
+    }
     dispath(addCommentsAction({id:params.id!, ...formData}));
     setFormData({comment: '', rating: 0});
   };
@@ -58,6 +63,7 @@ function OfferComment() {
           className="reviews__submit form__submit button"
           type="submit"
           onClick={submitFormHandler}
+          disabled={formData.comment.length < 50}
         >
     Submit
         </button>

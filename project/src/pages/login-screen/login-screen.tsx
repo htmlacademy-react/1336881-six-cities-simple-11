@@ -1,11 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { loginAction } from '../../store/actions';
 import { useAppDispath } from '../../hooks/useAppDispatch';
 import Header from '../../components/header/header';
+import { toast } from 'react-toastify';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { AuthorizationStatus } from '../../types/auth';
 
 function LoginScreen () {
 
   const dispath = useAppDispath();
+  const { authorizationStatus } = useAppSelector((state) => state);
 
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -15,9 +19,19 @@ function LoginScreen () {
 
   const submitFormHandler = (e:React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if(passwordValue.length <= 1) {
+      toast.warn('your pw < 1');
+      return;
+    }
     dispath(loginAction({email: emailValue, password: passwordValue}));
+
   };
 
+  useEffect(()=> {
+    if(authorizationStatus === AuthorizationStatus.Auth){
+      window.history.back();
+    }
+  },[authorizationStatus]);
 
   return (
     <div className="page page--gray page--login">

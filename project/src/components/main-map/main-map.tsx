@@ -5,18 +5,17 @@ import useMap from '../../hooks/useMap';
 import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
 import { useAppSelector } from '../../hooks/useAppSelector';
+import { UrlMarker } from '../../const';
 
-const URL_MARKER_DEFAULT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
-const URL_MARKER_CURRENT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
 
 const defaultCustomIcon = leaflet.icon({
-  iconUrl: URL_MARKER_DEFAULT,
+  iconUrl: UrlMarker.Default,
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
 
 const currentCustomIcon = leaflet.icon({
-  iconUrl: URL_MARKER_CURRENT,
+  iconUrl: UrlMarker.Current,
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });

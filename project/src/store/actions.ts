@@ -8,6 +8,7 @@ import { AuthorizationStatus } from '../types/auth';
 import { dropToken, saveToken } from '../services/token';
 import { User } from '../types/user';
 import { Comment } from '../types/comment';
+import { ApiRoute } from '../const';
 
 export const isLoadingAction = createAction('loading/isLoadingAction');
 
@@ -53,21 +54,21 @@ type Tthunk = {
 
 export const getOffersAction = createAsyncThunk<void, void, Tthunk>('offer/getOffersAction', async (_,{dispatch, extra: api}) => {
   dispatch(isLoadingAction());
-  const {data} = await api.get<Offer[]>('/hotels');
+  const {data} = await api.get<Offer[]>(ApiRoute.Hotels);
   dispatch(handleOffersAction(data));
   dispatch(isLoadingAction());
 });
 
 export const getNearOffersAction = createAsyncThunk<void, string, Tthunk>('offer/getNearOffersAction', async (id,{dispatch, extra: api}) => {
   dispatch(isLoadingAction());
-  const {data} = await api.get<Offer[]>(`/hotels/${id}/nearby`);
+  const {data} = await api.get<Offer[]>(`${ApiRoute.Hotels}/${id}/nearby`);
   dispatch(handleNearOffersAction(data));
   dispatch(isLoadingAction());
 });
 
 export const checkAuthAction = createAsyncThunk<void, undefined, Tthunk>('user/checkAuthAction', async (_,{dispatch, extra: api}) => {
   try {
-    await api.get('/login');
+    await api.get(ApiRoute.Login);
     dispatch(handleLoginAction(AuthorizationStatus.Auth));
   } catch (error) {
     dispatch(handleLoginAction(AuthorizationStatus.NoAuth));
@@ -75,14 +76,14 @@ export const checkAuthAction = createAsyncThunk<void, undefined, Tthunk>('user/c
 });
 
 export const loginAction = createAsyncThunk<void, User, Tthunk>('user/checkAuthAction', async ({email, password},{dispatch, extra: api}) => {
-  const {data} = await api.post<User>('/login', {email, password});
+  const {data} = await api.post<User>(ApiRoute.Login, {email, password});
   dispatch(handleUserDataAction(data));
   saveToken(data.token || '');
   dispatch(handleLoginAction(AuthorizationStatus.Auth));
 });
 
 export const logoutAction = createAsyncThunk<void, undefined, Tthunk>('user/checkAuthAction', async (_,{dispatch, extra: api}) => {
-  await api.delete('/login');
+  await api.delete(ApiRoute.Login);
   dispatch(handleUserDataAction(null));
   dropToken();
   dispatch(handleLoginAction(AuthorizationStatus.NoAuth));
@@ -90,7 +91,7 @@ export const logoutAction = createAsyncThunk<void, undefined, Tthunk>('user/chec
 
 
 export const getCommentsAction = createAsyncThunk<void, string, Tthunk>('comments/getCommentsAction', async (id,{dispatch, extra: api}) => {
-  const {data} = await api.get<Comment[]>(`/comments/${id}`);
+  const {data} = await api.get<Comment[]>(`${ApiRoute.Comments}/${id}`);
   dispatch(handleGetCommentsAction(data));
 });
 
@@ -100,7 +101,7 @@ export const addCommentsAction = createAsyncThunk<
   {id:string; comment:string; rating:number},
   Tthunk>('comments/addCommentsAction',
     async ({id, comment, rating},{dispatch, extra: api}) => {
-      const {data} = await api.post<Comment[]>(`/comments/${id}`, {comment, rating});
+      const {data} = await api.post<Comment[]>(`${ApiRoute.Comments}/${id}`, {comment, rating});
       dispatch(handleAddCommentsAction(data));
     });
 
