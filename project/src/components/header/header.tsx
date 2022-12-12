@@ -7,17 +7,34 @@ import { useAppDispath } from '../../hooks/useAppDispatch';
 import React from 'react';
 
 
+function Auth({logoutHandler}:{logoutHandler: (e:React.SyntheticEvent<HTMLAnchorElement>) => void}) {
+  const { authorizationStatus} = useAppSelector((state) => state);
+  return (
+    authorizationStatus === AuthorizationStatus.Auth ?
+      <li className="header__nav-item">
+        <a className="header__nav-link" href="#" onClick={logoutHandler}>
+          <span className="header__signout">Sign out</span>
+        </a>
+      </li> :
+      <li className="header__nav-item user">
+        <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Login}>
+          <div className="header__avatar-wrapper user__avatar-wrapper" />
+          <span className="header__login">Sign in</span>
+        </Link>
+      </li>
+  );
+}
+
+
 function Header() {
-  const { authorizationStatus, user} = useAppSelector((state) => state);
+  const { authorizationStatus, user, isLoading} = useAppSelector((state) => state);
 
   const dispath = useAppDispath();
 
   const logoutHandler = (e:React.SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     dispath(logoutAction());
-
   };
-
   return (
     <header className="header">
       <div className="container">
@@ -47,18 +64,7 @@ function Header() {
                     </span>
                   </div>
                 </li> : null}
-              {authorizationStatus === AuthorizationStatus.Auth ?
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#" onClick={logoutHandler}>
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li> :
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Login}>
-                    <div className="header__avatar-wrapper user__avatar-wrapper" />
-                    <span className="header__login">Sign in</span>
-                  </Link>
-                </li>}
+              {!isLoading && <Auth logoutHandler={logoutHandler}/>}
             </ul>
           </nav>
         </div>

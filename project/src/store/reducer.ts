@@ -1,8 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { CITY } from '../mocks/city';
-import { reviewItems } from '../mocks/reviews';
 import { AuthorizationStatus } from '../types/auth';
 import { City } from '../types/city';
+import { Comment } from '../types/comment';
 import { Offer } from '../types/offer';
 import { Review } from '../types/review';
 import { User } from '../types/user';
@@ -17,6 +16,10 @@ import { changeCityAction,
   handleSortPopularAction,
   handleLoginAction,
   handleUserDataAction,
+  handleGetCommentsAction,
+  handleAddCommentsAction,
+  handleOfferAction,
+  setIsOfferLoading,
 } from './actions';
 
 type InitialState = {
@@ -24,33 +27,62 @@ type InitialState = {
   reviews: Review[];
   currentCity: City;
   isLoading: boolean;
+  isOfferLoading: boolean;
   nearOffer: Offer[];
   activeCard: Offer | undefined;
   popularOffers: Offer[];
   authorizationStatus: AuthorizationStatus;
   user: User | null;
+  comments: Comment[];
+  citys: City[];
+  currentOffer?: Offer;
+};
+
+const paris = {
+  name: 'Paris',
+  lat: 48.87861,
+  lng: 2.357499,
+  zoom: 16
 };
 
 const initialState: InitialState = {
   offers: [],
-  reviews: reviewItems,
-  currentCity: CITY,
+  reviews: [],
+  currentCity: paris,
   isLoading: false,
   nearOffer: [],
   activeCard: undefined,
   popularOffers: [],
   authorizationStatus: AuthorizationStatus.NoAuth,
   user: null,
+  comments: [],
+  citys: [paris],
+  isOfferLoading: false,
 };
 
 export const mainReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(changeCityAction, (state, action) => {
       state.currentCity = action.payload;
+      state.offers = state.popularOffers.filter((el) => el.city.name === action.payload.name);
     })
     .addCase(handleOffersAction, (state, action) => {
       state.offers = action.payload.filter((el) => el.city.name === state.currentCity.name);
-      state.popularOffers = state.offers;
+      state.popularOffers = action.payload;
+      const unicCitys:City[] = [];
+
+      action.payload.forEach((el) => {
+        if(unicCitys.find((city) => city.name === el.city.name)){
+          return;
+        }
+        unicCitys.push({
+          name: el.city.name,
+          lat: el.city.location.latitude,
+          lng: el.city.location.longitude,
+          zoom: 10,
+        });
+      });
+      state.citys = unicCitys.reverse();
     })
     .addCase(isLoadingAction, (state) => {
       state.isLoading = !state.isLoading;
@@ -71,12 +103,29 @@ export const mainReducer = createReducer(initialState, (builder) => {
       state.offers.sort((b, a) => a.rating - b.rating);
     })
     .addCase(handleSortPopularAction, (state) => {
-      state.offers = state.popularOffers;
+      state.offers = state.popularOffers.filter((el) => el.city.name === state.currentCity.name);
     })
     .addCase(handleLoginAction, (state, action) => {
-      state.authorizationStatus = action.payload;
+      state.authorizationStatus = action.payload.status;
+      if(action.payload.data){
+        state.user = action.payload.data;
+      }
     })
     .addCase(handleUserDataAction, (state, action) => {
       state.user = action.payload;
+    })
+    .addCase(handleGetCommentsAction, (state, action) => {
+      state.comments = action.payload;
+    })
+    .addCase(handleAddCommentsAction, (state, action) => {
+      state.comments = action.payload;
+    })
+    .addCase(handleOfferAction, (state, action) => {
+      state.currentOffer = action.payload;
+    })
+    .addCase(setIsOfferLoading, (state) => {
+      state.isOfferLoading = !state.isOfferLoading;
     });
 });
+
+

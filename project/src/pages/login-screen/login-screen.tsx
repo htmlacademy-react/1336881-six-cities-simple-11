@@ -1,23 +1,42 @@
-import React, { useState, useRef } from 'react';
-import { loginAction } from '../../store/actions';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { changeCityAction, loginAction } from '../../store/actions';
 import { useAppDispath } from '../../hooks/useAppDispatch';
 import Header from '../../components/header/header';
+import { toast } from 'react-toastify';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { AuthorizationStatus } from '../../types/auth';
+import { getRandomPositiveInteger } from '../../utils';
+import { useNavigate } from 'react-router-dom';
 
 function LoginScreen () {
 
   const dispath = useAppDispath();
+  const { authorizationStatus, citys } = useAppSelector((state) => state);
 
+  const randomCity = useMemo(() => citys[getRandomPositiveInteger(0, citys.length - 1)],[citys]);
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
+  const navigate = useNavigate();
+
   const submitFormHandler = (e:React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if(passwordValue.length <= 1) {
+      toast.warn('your pw < 1');
+      return;
+    }
     dispath(loginAction({email: emailValue, password: passwordValue}));
+
   };
 
+  useEffect(()=> {
+    if(authorizationStatus === AuthorizationStatus.Auth){
+      window.history.back();
+    }
+  },[authorizationStatus]);
 
   return (
     <div className="page page--gray page--login">
@@ -81,9 +100,13 @@ function LoginScreen () {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
-                <span>Amsterdam</span>
-              </a>
+              <div className="locations__item-link" style={{cursor: 'pointer'}} onClick={() => {
+                dispath(changeCityAction(randomCity));
+                navigate('/');
+              }}
+              >
+                <span>{randomCity.name}</span>
+              </div>
             </div>
           </section>
         </div>

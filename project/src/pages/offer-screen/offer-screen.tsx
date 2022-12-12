@@ -1,30 +1,40 @@
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispath } from '../../hooks/useAppDispatch';
 import { useEffect } from 'react';
-import { getNearOffersAction } from '../../store/actions';
+import { getCommentsAction, getNearOffersAction } from '../../store/actions';
 import OfferItem from '../../components/offer-item/offer-item';
+import { AuthorizationStatus } from '../../types/auth';
 
 import OfferComment from '../../components/offer-comment/offer-comment';
 import Map from '../../components/main-map/main-map';
+import ReviewsItem from '../../components/reviews-item/reviews-item';
+import Header from '../../components/header/header';
+import Spiner from '../../components/spiner/spiner';
+import { getRating } from '../../utils';
+import { getOfferAction } from '../../store/actions';
+import EmptyScreen from '../empty-screen/empty-screen';
 
 function OfferScreen () {
   const params = useParams<{id: string}>();
 
-  const { offers, nearOffer } = useAppSelector((state) => state);
-  const currentOffer = offers.find((el) => Number(params.id) === el.id);
+  const {nearOffer, comments, authorizationStatus, isLoading , currentOffer, isOfferLoading, offers} = useAppSelector((state) => state);
   const dispath = useAppDispath();
+
+  const activeOffer = offers.find((el) => Number(params.id) === el.id);
+
 
   useEffect(() => {
     if(params.id){
       dispath(getNearOffersAction(params.id));
+      dispath(getCommentsAction(params.id));
+      dispath(getOfferAction(params.id));
     }
-  }, []);
+  }, [params.id]);
 
-  const getRating = (num:number) => `${Number(num.toString()[0] + num.toString()[2]) * 2}%`;
-
+  if(isLoading){
+    return <Spiner/>;
+  }
   if(currentOffer) {
     return (
       <div className="page">
@@ -49,40 +59,7 @@ function OfferScreen () {
             </symbol>
           </svg>
         </div>
-        <header className="header">
-          <div className="container">
-            <div className="header__wrapper">
-              <div className="header__left">
-                <Link className="header__logo-link" to={AppRoute.Root}>
-                  <img
-                    className="header__logo"
-                    src="img/logo.svg"
-                    alt="6 cities logo"
-                    width={81}
-                    height={41}
-                  />
-                </Link>
-              </div>
-              <nav className="header__nav">
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <div className="header__nav-profile">
-                      <div className="header__avatar-wrapper user__avatar-wrapper" />
-                      <span className="header__user-name user__name">
-                  Oliver.conner@gmail.com
-                      </span>
-                    </div>
-                  </li>
-                  <li className="header__nav-item">
-                    <a className="header__nav-link" href="#">
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </header>
+        <Header/>
         <main className="page__main page__main--property">
           <section className="property">
             <div className="property__gallery-container container">
@@ -119,10 +96,10 @@ function OfferScreen () {
                     {currentOffer.type}
                   </li>
                   <li className="property__feature property__feature--bedrooms">
-                    {currentOffer.bedrooms} Bedrooms
+                    {currentOffer.bedrooms} Bedroom{`${currentOffer.bedrooms === 1 ? '' : 's'}`}
                   </li>
                   <li className="property__feature property__feature--adults">
-                    {`Max ${currentOffer.maxAdults} adults`}
+                    {`Max ${currentOffer.maxAdults} adult${currentOffer.bedrooms === 1 ? '' : 's'}`}
                   </li>
                 </ul>
                 <div className="property__price">
@@ -165,41 +142,14 @@ function OfferScreen () {
                 </div>
                 <section className="property__reviews reviews">
                   <h2 className="reviews__title">
-              Reviews · <span className="reviews__amount">1</span>
+              Reviews · <span className="reviews__amount">{comments.length}</span>
                   </h2>
                   <ul className="reviews__list">
-                    <li className="reviews__item">
-                      <div className="reviews__user user">
-                        <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                          <img
-                            className="reviews__avatar user__avatar"
-                            src="img/avatar-max.jpg"
-                            width={54}
-                            height={54}
-                            alt="Reviews avatar"
-                          />
-                        </div>
-                        <span className="reviews__user-name">Max</span>
-                      </div>
-                      <div className="reviews__info">
-                        <div className="reviews__rating rating">
-                          <div className="reviews__stars rating__stars">
-                            <span style={{ width: '80%' }} />
-                            <span className="visually-hidden">Rating</span>
-                          </div>
-                        </div>
-                        <p className="reviews__text">
-                    A quiet cozy and picturesque that hides behind a a river by
-                    the unique lightness of Amsterdam. The building is green and
-                    from 18th century.
-                        </p>
-                        <time className="reviews__time" dateTime="2019-04-24">
-                    April 2019
-                        </time>
-                      </div>
-                    </li>
+                    {comments.slice(0, 9).map((comment) => (
+                      <ReviewsItem {...comment} key={comment.id}></ReviewsItem>
+                    ))}
                   </ul>
-                  <OfferComment />
+                  {authorizationStatus === AuthorizationStatus.Auth ? <OfferComment /> : null}
                 </section>
               </div>
             </div>
@@ -223,6 +173,12 @@ function OfferScreen () {
         </main>
       </div>
     );
+  }
+  if(isOfferLoading) {
+    return null;
+  }
+  if(!activeOffer && !currentOffer){
+    return <EmptyScreen/>;
   }
   return null;
 }

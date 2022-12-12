@@ -5,18 +5,16 @@ import useMap from '../../hooks/useMap';
 import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
 import { useAppSelector } from '../../hooks/useAppSelector';
-
-const URL_MARKER_DEFAULT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
-const URL_MARKER_CURRENT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
+import { UrlMarker } from '../../const';
 
 const defaultCustomIcon = leaflet.icon({
-  iconUrl: URL_MARKER_DEFAULT,
+  iconUrl: UrlMarker.Default,
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
 
 const currentCustomIcon = leaflet.icon({
-  iconUrl: URL_MARKER_CURRENT,
+  iconUrl: UrlMarker.Current,
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
@@ -51,6 +49,12 @@ function Map({city, points, isMainMap}: MapProps) {
     }
   }, [map, points, activeCard]);
 
+
+  useEffect(() => {
+    if(map){
+      map.flyTo({lat: city.lat, lng: city.lng}, 10);
+    }
+  },[city]);
 
   return (
     <div

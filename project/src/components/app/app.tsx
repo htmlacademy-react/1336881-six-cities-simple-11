@@ -13,6 +13,7 @@ function App(): JSX.Element {
         <Route path={AppRoute.Root} element={<MainScreen />}></Route>
         <Route path={AppRoute.Login} element={<LoginScreen />}></Route>
         <Route path={AppRoute.Room} element={<OfferScreen/>}></Route>
+        <Route path={AppRoute.NotFound} element={<NotFoundScreen />}></Route>
         <Route path='*' element={<NotFoundScreen />}></Route>
       </Routes>
     </BrowserRouter>

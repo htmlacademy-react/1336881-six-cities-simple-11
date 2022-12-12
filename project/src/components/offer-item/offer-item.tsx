@@ -4,6 +4,7 @@ import React from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import { useAppDispath } from '../../hooks/useAppDispatch';
 import { handleActiveCardAction} from '../../store/actions';
+import { getRating } from '../../utils';
 
 function OfferItem (props:Offer) {
   const navigate = useNavigate();
@@ -15,7 +16,6 @@ function OfferItem (props:Offer) {
 
   const dispath = useAppDispath();
 
-  const getRating = (num:number) => `${Number(num.toString()[0] + num.toString()[2]) * 2}%`;
 
   return (
     <article className="cities__card place-card" onMouseOver={() => {dispath(handleActiveCardAction(props));}}>
@@ -34,7 +34,7 @@ function OfferItem (props:Offer) {
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">{props.price}</b>
+            <b className="place-card__price-value">{props.price} €</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
         </div>
@@ -44,11 +44,13 @@ function OfferItem (props:Offer) {
             <span className="visually-hidden">{props.rating}</span>
           </div>
         </div>
-        <h2 className="place-card__name">
-          <Link to={`/offer/${props.id}`}>
+
+        <Link to={`/offer/${props.id}`}>
+          <h2 className="place-card__name">
             {props.title}
-          </Link>
-        </h2>
+          </h2>
+        </Link>
+
         <p className="place-card__type">{props.type}</p>
       </div>
     </article>
