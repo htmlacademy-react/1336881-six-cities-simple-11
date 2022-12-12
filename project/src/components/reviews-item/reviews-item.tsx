@@ -1,5 +1,6 @@
 import { Comment } from '../../types/comment';
 import { getRating } from '../../utils';
+import dayjs from 'dayjs';
 
 const ReviewsItem = ({comment, rating, date, user}:Comment):JSX.Element => (
   <li className="reviews__item">
@@ -25,8 +26,8 @@ const ReviewsItem = ({comment, rating, date, user}:Comment):JSX.Element => (
       <p className="reviews__text">
         {comment}
       </p>
-      <time className="reviews__time" dateTime="2019-04-24">
-        {date}
+      <time className="reviews__time" dateTime={date}>
+        {dayjs(date).format('DD/MM/YYYY')}
       </time>
     </div>
   </li>

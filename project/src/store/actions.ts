@@ -36,7 +36,7 @@ export const handleSortRatingAction = createAction('offer/handleSortRatingAction
 
 export const handleSortPopularAction = createAction('offer/handleSortPopularAction');
 
-export const handleLoginAction = createAction('user/handleSortPopularAction', (value:AuthorizationStatus) => ({payload:value}));
+export const handleLoginAction = createAction('user/handleSortPopularAction', (value:{status: AuthorizationStatus; data?: User}) => ({payload:value}));
 
 export const handleUserDataAction = createAction('user/handleUserDataAction', (value: User | null) => ({payload:value}));
 
@@ -44,6 +44,11 @@ export const handleGetCommentsAction = createAction('comments/handleGetCommentsA
 
 export const handleAddCommentsAction = createAction('comments/handleAddCommentsAction', (value: Comment[]) => ({payload:value}));
 
+export const handleOfferAction = createAction('offer/handleOfferAction', (value:Offer) => ({
+  payload: value,
+}));
+
+export const setIsOfferLoading = createAction('offer/setIsOfferLoading');
 
 type Tthunk = {
   dispatch: TDispath;
@@ -60,18 +65,16 @@ export const getOffersAction = createAsyncThunk<void, void, Tthunk>('offer/getOf
 });
 
 export const getNearOffersAction = createAsyncThunk<void, string, Tthunk>('offer/getNearOffersAction', async (id,{dispatch, extra: api}) => {
-  dispatch(isLoadingAction());
   const {data} = await api.get<Offer[]>(`${ApiRoute.Hotels}/${id}/nearby`);
   dispatch(handleNearOffersAction(data));
-  dispatch(isLoadingAction());
 });
 
 export const checkAuthAction = createAsyncThunk<void, undefined, Tthunk>('user/checkAuthAction', async (_,{dispatch, extra: api}) => {
   try {
-    await api.get(ApiRoute.Login);
-    dispatch(handleLoginAction(AuthorizationStatus.Auth));
+    const {data} = await api.get<User>(ApiRoute.Login);
+    dispatch(handleLoginAction({status: AuthorizationStatus.Auth, data}));
   } catch (error) {
-    dispatch(handleLoginAction(AuthorizationStatus.NoAuth));
+    dispatch(handleLoginAction({status: AuthorizationStatus.NoAuth}));
   }
 });
 
@@ -79,14 +82,14 @@ export const loginAction = createAsyncThunk<void, User, Tthunk>('user/checkAuthA
   const {data} = await api.post<User>(ApiRoute.Login, {email, password});
   dispatch(handleUserDataAction(data));
   saveToken(data.token || '');
-  dispatch(handleLoginAction(AuthorizationStatus.Auth));
+  dispatch(handleLoginAction({status: AuthorizationStatus.Auth}));
 });
 
 export const logoutAction = createAsyncThunk<void, undefined, Tthunk>('user/checkAuthAction', async (_,{dispatch, extra: api}) => {
   await api.delete(ApiRoute.Login);
   dispatch(handleUserDataAction(null));
   dropToken();
-  dispatch(handleLoginAction(AuthorizationStatus.NoAuth));
+  dispatch(handleLoginAction({status: AuthorizationStatus.NoAuth}));
 });
 
 
@@ -104,4 +107,12 @@ export const addCommentsAction = createAsyncThunk<
       const {data} = await api.post<Comment[]>(`${ApiRoute.Comments}/${id}`, {comment, rating});
       dispatch(handleAddCommentsAction(data));
     });
+
+
+export const getOfferAction = createAsyncThunk<void, string, Tthunk>('offer/getOfferAction', async (id,{dispatch, extra: api}) => {
+  dispatch(setIsOfferLoading());
+  const {data} = await api.get<Offer>(`${ApiRoute.Hotels}/${id}`);
+  dispatch(handleOfferAction(data));
+  dispatch(setIsOfferLoading());
+});
 

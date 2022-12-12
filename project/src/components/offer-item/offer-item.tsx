@@ -17,7 +17,6 @@ function OfferItem (props:Offer) {
   const dispath = useAppDispath();
 
 
-
   return (
     <article className="cities__card place-card" onMouseOver={() => {dispath(handleActiveCardAction(props));}}>
       {props.isPremium ? <div className="place-card__mark"> <span>Premium</span></div> : null}
@@ -45,11 +44,13 @@ function OfferItem (props:Offer) {
             <span className="visually-hidden">{props.rating}</span>
           </div>
         </div>
-        <h2 className="place-card__name">
-          <Link to={`/offer/${props.id}`}>
+
+        <Link to={`/offer/${props.id}`}>
+          <h2 className="place-card__name">
             {props.title}
-          </Link>
-        </h2>
+          </h2>
+        </Link>
+
         <p className="place-card__type">{props.type}</p>
       </div>
     </article>

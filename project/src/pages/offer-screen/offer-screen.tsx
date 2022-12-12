@@ -1,5 +1,3 @@
-import {Navigate} from 'react-router-dom';
-import {AppRoute} from '../../const';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispath } from '../../hooks/useAppDispatch';
@@ -14,20 +12,25 @@ import ReviewsItem from '../../components/reviews-item/reviews-item';
 import Header from '../../components/header/header';
 import Spiner from '../../components/spiner/spiner';
 import { getRating } from '../../utils';
+import { getOfferAction } from '../../store/actions';
+import EmptyScreen from '../empty-screen/empty-screen';
 
 function OfferScreen () {
   const params = useParams<{id: string}>();
 
-  const { offers, nearOffer, comments, authorizationStatus, isLoading } = useAppSelector((state) => state);
-  const currentOffer = offers.find((el) => Number(params.id) === el.id);
+  const {nearOffer, comments, authorizationStatus, isLoading , currentOffer, isOfferLoading, offers} = useAppSelector((state) => state);
   const dispath = useAppDispath();
+
+  const activeOffer = offers.find((el) => Number(params.id) === el.id);
+
 
   useEffect(() => {
     if(params.id){
       dispath(getNearOffersAction(params.id));
       dispath(getCommentsAction(params.id));
+      dispath(getOfferAction(params.id));
     }
-  }, []);
+  }, [params.id]);
 
   if(isLoading){
     return <Spiner/>;
@@ -171,7 +174,13 @@ function OfferScreen () {
       </div>
     );
   }
-  return <Navigate to={AppRoute.NotFound}/>;
+  if(isOfferLoading) {
+    return null;
+  }
+  if(!activeOffer && !currentOffer){
+    return <EmptyScreen/>;
+  }
+  return null;
 }
 
 export default OfferScreen;

@@ -12,25 +12,25 @@ function OfferComment() {
 
   const dispath = useAppDispath();
 
-  const [formData, setFormData] = React.useState({
-    comment: '',
-    rating: 0
-  });
 
-  const fieldChangeHandle = (evt:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    const {name, value} = evt.target;
-    setFormData({...formData, [name]: value});
-  };
+  const [rating, setRating] = React.useState(0);
+  const [comment, setComment] = React.useState('');
+
+  // const fieldChangeHandle = (evt:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  //   const {name, value} = evt.target;
+  //   setFormData({...formData, [name]: value});
+  // };
 
 
   const submitFormHandler = (e:React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if(formData.comment.length < 50) {
+    if(comment.length < 50) {
       toast.warn('comment length have to be 50 at liast');
       return;
     }
-    dispath(addCommentsAction({id:params.id!, ...formData}));
-    setFormData({comment: '', rating: 0});
+    dispath(addCommentsAction({id:params.id!, comment, rating}));
+    setRating(0);
+    setComment('');
   };
 
 
@@ -40,17 +40,18 @@ function OfferComment() {
   Your review
       </label>
       <div className="reviews__rating-form form__rating">
-        <RatingStar title={Grade.star1} id={1} currentRating={formData.rating} onChange={fieldChangeHandle}/>
-        <RatingStar title={Grade.star2} id={2} currentRating={formData.rating} onChange={fieldChangeHandle}/>
-        <RatingStar title={Grade.star3} id={3} currentRating={formData.rating} onChange={fieldChangeHandle}/>
-        <RatingStar title={Grade.star4} id={4} currentRating={formData.rating} onChange={fieldChangeHandle}/>
-        <RatingStar title={Grade.star5} id={5} currentRating={formData.rating} onChange={fieldChangeHandle}/>
+        <RatingStar title={Grade.star1} id={5} currentRating={rating} onChange={setRating}/>
+        <RatingStar title={Grade.star2} id={4} currentRating={rating} onChange={setRating}/>
+        <RatingStar title={Grade.star3} id={3} currentRating={rating} onChange={setRating}/>
+        <RatingStar title={Grade.star4} id={2} currentRating={rating} onChange={setRating}/>
+        <RatingStar title={Grade.star5} id={1} currentRating={rating} onChange={setRating}/>
       </div>
-      <textarea onChange={fieldChangeHandle} value={formData.comment}
+      <textarea onChange={(e) => setComment(e.target.value)} value={comment}
         className="reviews__textarea form__textarea"
         id="review"
         name="comment"
         placeholder="Tell how was your stay, what you like and what can be improved"
+        maxLength={300}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
@@ -63,7 +64,7 @@ function OfferComment() {
           className="reviews__submit form__submit button"
           type="submit"
           onClick={submitFormHandler}
-          disabled={formData.comment.length < 50}
+          disabled={comment.length < 50}
         >
     Submit
         </button>

@@ -7,7 +7,6 @@ import { Offer } from '../../types/offer';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { UrlMarker } from '../../const';
 
-
 const defaultCustomIcon = leaflet.icon({
   iconUrl: UrlMarker.Default,
   iconSize: [40, 40],
@@ -50,6 +49,12 @@ function Map({city, points, isMainMap}: MapProps) {
     }
   }, [map, points, activeCard]);
 
+
+  useEffect(() => {
+    if(map){
+      map.flyTo({lat: city.lat, lng: city.lng}, 10);
+    }
+  },[city]);
 
   return (
     <div

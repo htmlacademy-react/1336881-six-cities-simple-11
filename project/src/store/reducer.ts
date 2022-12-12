@@ -18,6 +18,8 @@ import { changeCityAction,
   handleUserDataAction,
   handleGetCommentsAction,
   handleAddCommentsAction,
+  handleOfferAction,
+  setIsOfferLoading,
 } from './actions';
 
 type InitialState = {
@@ -25,6 +27,7 @@ type InitialState = {
   reviews: Review[];
   currentCity: City;
   isLoading: boolean;
+  isOfferLoading: boolean;
   nearOffer: Offer[];
   activeCard: Offer | undefined;
   popularOffers: Offer[];
@@ -32,6 +35,7 @@ type InitialState = {
   user: User | null;
   comments: Comment[];
   citys: City[];
+  currentOffer?: Offer;
 };
 
 const paris = {
@@ -53,6 +57,7 @@ const initialState: InitialState = {
   user: null,
   comments: [],
   citys: [paris],
+  isOfferLoading: false,
 };
 
 export const mainReducer = createReducer(initialState, (builder) => {
@@ -101,7 +106,10 @@ export const mainReducer = createReducer(initialState, (builder) => {
       state.offers = state.popularOffers.filter((el) => el.city.name === state.currentCity.name);
     })
     .addCase(handleLoginAction, (state, action) => {
-      state.authorizationStatus = action.payload;
+      state.authorizationStatus = action.payload.status;
+      if(action.payload.data){
+        state.user = action.payload.data;
+      }
     })
     .addCase(handleUserDataAction, (state, action) => {
       state.user = action.payload;
@@ -111,5 +119,13 @@ export const mainReducer = createReducer(initialState, (builder) => {
     })
     .addCase(handleAddCommentsAction, (state, action) => {
       state.comments = action.payload;
+    })
+    .addCase(handleOfferAction, (state, action) => {
+      state.currentOffer = action.payload;
+    })
+    .addCase(setIsOfferLoading, (state) => {
+      state.isOfferLoading = !state.isOfferLoading;
     });
 });
+
+
