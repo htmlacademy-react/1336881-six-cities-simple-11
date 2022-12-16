@@ -1,17 +1,18 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { changeCityAction, loginAction } from '../../store/actions';
+import { loginAction } from '../../store/actions';
 import { useAppDispath } from '../../hooks/useAppDispatch';
 import Header from '../../components/header/header';
 import { toast } from 'react-toastify';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { AuthorizationStatus } from '../../types/auth';
-import { getRandomPositiveInteger } from '../../utils';
+import { getRandomPositiveInteger, validatePassword } from '../../utils';
 import { useNavigate } from 'react-router-dom';
+import { changeCityAction } from '../../store/offers-process/offers-process';
 
 function LoginScreen () {
 
   const dispath = useAppDispath();
-  const { authorizationStatus, citys } = useAppSelector((state) => state);
+  const { authorizationStatus, citys } = useAppSelector((state) => ({...state.offers, ...state.user}));
 
   const randomCity = useMemo(() => citys[getRandomPositiveInteger(0, citys.length - 1)],[citys]);
   const [emailValue, setEmailValue] = useState('');
@@ -22,13 +23,18 @@ function LoginScreen () {
 
   const navigate = useNavigate();
 
-  const submitFormHandler = (e:React.SyntheticEvent<HTMLButtonElement>) => {
+  const handleSubmitForm = (e:React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if(passwordValue.length <= 1) {
       toast.warn('your pw < 1');
       return;
     }
-    dispath(loginAction({email: emailValue, password: passwordValue}));
+
+    const isValid = validatePassword(passwordValue);
+
+    if(isValid) {
+      dispath(loginAction({email: emailValue, password: passwordValue}));
+    }
 
   };
 
@@ -93,7 +99,7 @@ function LoginScreen () {
                   required
                 />
               </div>
-              <button className="login__submit form__submit button" onClick={submitFormHandler} type="submit">
+              <button className="login__submit form__submit button" onClick={handleSubmitForm} type="submit">
             Sign in
               </button>
             </form>

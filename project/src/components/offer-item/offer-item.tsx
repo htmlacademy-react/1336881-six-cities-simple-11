@@ -3,13 +3,13 @@ import { Offer } from '../../types/offer';
 import React from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import { useAppDispath } from '../../hooks/useAppDispatch';
-import { handleActiveCardAction} from '../../store/actions';
 import { getRating } from '../../utils';
+import { handleActiveCardAction } from '../../store/offers-process/offers-process';
 
 function OfferItem (props:Offer) {
   const navigate = useNavigate();
 
-  const clickHandler = () => {
+  const handleClick = () => {
     window.scrollTo(0,0);
     navigate(`/offer/${props.id}`);
   };
@@ -21,7 +21,7 @@ function OfferItem (props:Offer) {
     <article className="cities__card place-card" onMouseOver={() => {dispath(handleActiveCardAction(props));}}>
       {props.isPremium ? <div className="place-card__mark"> <span>Premium</span></div> : null}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <div onClick={clickHandler}>
+        <div onClick={handleClick}>
           <img
             className="place-card__image"
             src={props.previewImage}

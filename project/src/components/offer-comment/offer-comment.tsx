@@ -5,6 +5,7 @@ import { useAppDispath } from '../../hooks/useAppDispatch';
 import { addCommentsAction } from '../../store/actions';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { CommentLength } from '../../const';
 
 function OfferComment() {
 
@@ -16,15 +17,9 @@ function OfferComment() {
   const [rating, setRating] = React.useState(0);
   const [comment, setComment] = React.useState('');
 
-  // const fieldChangeHandle = (evt:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-  //   const {name, value} = evt.target;
-  //   setFormData({...formData, [name]: value});
-  // };
-
-
-  const submitFormHandler = (e:React.SyntheticEvent<HTMLButtonElement>) => {
+  const handleSubmitForm = (e:React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if(comment.length < 50) {
+    if(comment.length < CommentLength.Min) {
       toast.warn('comment length have to be 50 at liast');
       return;
     }
@@ -51,7 +46,7 @@ function OfferComment() {
         id="review"
         name="comment"
         placeholder="Tell how was your stay, what you like and what can be improved"
-        maxLength={300}
+        maxLength={CommentLength.Max}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
@@ -63,7 +58,7 @@ function OfferComment() {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          onClick={submitFormHandler}
+          onClick={handleSubmitForm}
           disabled={comment.length < 50}
         >
     Submit

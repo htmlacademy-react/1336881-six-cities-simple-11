@@ -1,15 +1,15 @@
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispath } from '../../hooks/useAppDispatch';
-import { changeCityAction } from '../../store/actions';
 import { City } from '../../types/city';
+import { changeCityAction } from '../../store/offers-process/offers-process';
 
 
 function Tabs ():JSX.Element {
 
-  const {currentCity, citys} = useAppSelector((state) => state);
+  const {currentCity, citys} = useAppSelector((state) => ({...state.offers}));
   const dispath = useAppDispath();
 
-  const setActiveTabHandler = (city:City) => {
+  const handleSetActiveTab = (city:City) => {
     dispath(changeCityAction(city));
   };
 
@@ -19,7 +19,7 @@ function Tabs ():JSX.Element {
         <ul className="locations__list tabs__list">
           {citys.map((el) => (
             <li className="locations__item" key={el.name}>
-              <a className={`locations__item-link tabs__item ${currentCity.name === el.name ? 'tabs__item--active' : ''}`} onClick={() => setActiveTabHandler(el)} href="#">
+              <a className={`locations__item-link tabs__item ${currentCity.name === el.name ? 'tabs__item--active' : ''}`} onClick={() => handleSetActiveTab(el)} href="#">
                 <span>{el.name}</span>
               </a>
             </li>
