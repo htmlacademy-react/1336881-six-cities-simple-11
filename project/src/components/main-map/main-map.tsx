@@ -23,14 +23,24 @@ type MapProps = {
   city: City;
   points: Offer[];
   isMainMap: boolean;
+  activeOffer?: Offer;
 };
 
 
-function Map({city, points, isMainMap}: MapProps) {
+function Map({city, points, isMainMap, activeOffer}: MapProps) {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
-  const { activeCard } = useAppSelector((state) => state);
+  const getIcon = (offer:Offer) => {
+    if(activeOffer?.id === offer.id) {
+      return currentCustomIcon;
+    }
+    return (activeCard && offer.id === activeCard.id && isMainMap)
+      ? currentCustomIcon
+      : defaultCustomIcon;
+  };
+
+  const { activeCard } = useAppSelector((state) => ({...state.offers}));
 
   useEffect(() => {
     if (map) {
@@ -40,9 +50,7 @@ function Map({city, points, isMainMap}: MapProps) {
             lat: point.location.latitude,
             lng: point.location.longitude,
           }, {
-            icon: (activeCard && point.id === activeCard.id && isMainMap)
-              ? currentCustomIcon
-              : defaultCustomIcon,
+            icon: getIcon(point)
           })
           .addTo(map);
       });
@@ -51,7 +59,7 @@ function Map({city, points, isMainMap}: MapProps) {
 
 
   useEffect(() => {
-    if(map){
+    if(map && isMainMap){
       map.flyTo({lat: city.lat, lng: city.lng}, 10);
     }
   },[city]);

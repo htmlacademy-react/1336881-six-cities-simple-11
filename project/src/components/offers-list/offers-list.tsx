@@ -4,7 +4,7 @@ import Spiner from '../spiner/spiner';
 
 const OffersList = ():JSX.Element => {
 
-  const { offers, isLoading } = useAppSelector((state) => state);
+  const { offers, isLoading } = useAppSelector((state) => ({...state.offers}));
 
   if(isLoading){
     return <Spiner/>;

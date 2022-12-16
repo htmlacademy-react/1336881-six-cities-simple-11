@@ -8,7 +8,7 @@ import Tabs from '../../components/tabs/tabs';
 
 function MainScreen (): JSX.Element {
 
-  const { offers, currentCity } = useAppSelector((state) => state);
+  const { offers, currentCity } = useAppSelector((state) => ({...state.offers}));
 
   return (
     <>

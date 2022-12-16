@@ -1,5 +1,4 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { City } from '../types/city';
+import {createAsyncThunk } from '@reduxjs/toolkit';
 import { TDispath } from '../types';
 import { State } from '../types';
 import {AxiosInstance} from 'axios';
@@ -9,46 +8,10 @@ import { dropToken, saveToken } from '../services/token';
 import { User } from '../types/user';
 import { Comment } from '../types/comment';
 import { ApiRoute } from '../const';
+import { handleLoginAction, handleUserDataAction } from './user-process/user-process';
+import { handleGetCommentsAction, handleAddCommentsAction } from './comment-process/comment-process';
+import { isLoadingAction, handleOffersAction, handleNearOffersAction, setIsOfferLoading, handleOfferAction } from './offers-process/offers-process';
 
-export const isLoadingAction = createAction('loading/isLoadingAction');
-
-export const changeCityAction = createAction('city/changeCityAction', (value:City) => ({
-  payload: value,
-}));
-
-export const handleOffersAction = createAction('offer/handleOffersAction', (value:Offer[]) => ({
-  payload: value,
-}));
-
-export const handleNearOffersAction = createAction('offer/handleNearOffersAction', (value:Offer[]) => ({
-  payload: value,
-}));
-
-export const handleActiveCardAction = createAction('offer/handleActiveCardAction', (value:Offer) => ({
-  payload: value,
-}));
-
-export const handleSortPriceUpAction = createAction('offer/handleSortPriceUpAction');
-
-export const handleSortPriceDownAction = createAction('offer/handleSortPriceDownAction');
-
-export const handleSortRatingAction = createAction('offer/handleSortRatingAction');
-
-export const handleSortPopularAction = createAction('offer/handleSortPopularAction');
-
-export const handleLoginAction = createAction('user/handleSortPopularAction', (value:{status: AuthorizationStatus; data?: User}) => ({payload:value}));
-
-export const handleUserDataAction = createAction('user/handleUserDataAction', (value: User | null) => ({payload:value}));
-
-export const handleGetCommentsAction = createAction('comments/handleGetCommentsAction', (value: Comment[]) => ({payload:value}));
-
-export const handleAddCommentsAction = createAction('comments/handleAddCommentsAction', (value: Comment[]) => ({payload:value}));
-
-export const handleOfferAction = createAction('offer/handleOfferAction', (value:Offer) => ({
-  payload: value,
-}));
-
-export const setIsOfferLoading = createAction('offer/setIsOfferLoading');
 
 type Tthunk = {
   dispatch: TDispath;

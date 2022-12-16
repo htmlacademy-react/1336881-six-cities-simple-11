@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 export const getRating = (num:number) => {
   if(Number.isInteger(num)){
     return num * 20;
@@ -15,4 +17,17 @@ export function getRandomPositiveInteger (a:number, b:number) {
   return Math.floor(result);
 }
 
+export function validatePassword(str:string) {
+  const regNumber = new RegExp(/[0-9]/);
+  const regLower = new RegExp(/[a-z]/);
+  const regUpper = new RegExp(/[A-Z]/);
+
+  const result = regNumber.test(str) && (regLower.test(str) || regUpper.test(str));
+
+  if(!result) {
+    toast.warn('invalid password');
+  }
+
+  return result;
+}
 

@@ -12,6 +12,17 @@ export enum ApiRoute {
 }
 
 export enum UrlMarker {
-  Default = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg',
-  Current = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg'
+  Default = 'img/pin.svg',
+  Current = 'img/pin-active.svg'
+}
+
+export enum CommentLength {
+  Min = 50,
+  Max = 300
+}
+
+export enum NameSpace {
+  user = 'user',
+  comment = 'comment',
+  offers = 'offers',
 }

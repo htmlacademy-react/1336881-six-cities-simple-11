@@ -18,7 +18,11 @@ import EmptyScreen from '../empty-screen/empty-screen';
 function OfferScreen () {
   const params = useParams<{id: string}>();
 
-  const {nearOffer, comments, authorizationStatus, isLoading , currentOffer, isOfferLoading, offers} = useAppSelector((state) => state);
+  const {nearOffer, comments, authorizationStatus, isLoading , currentOffer, isOfferLoading, offers} = useAppSelector((state) => ({
+    ...state.offers,
+    ...state.comment,
+    ...state.user
+  }));
   const dispath = useAppDispath();
 
   const activeOffer = offers.find((el) => Number(params.id) === el.id);
@@ -29,6 +33,7 @@ function OfferScreen () {
       dispath(getNearOffersAction(params.id));
       dispath(getCommentsAction(params.id));
       dispath(getOfferAction(params.id));
+      window.scrollTo(0, 0);
     }
   }, [params.id]);
 
@@ -155,7 +160,7 @@ function OfferScreen () {
             </div>
             <Map city={
               {name: currentOffer.city.name, lat: currentOffer.city.location.latitude, lng: currentOffer.city.location.longitude, zoom: 10}
-            } points={nearOffer} isMainMap={false}
+            } points={[...nearOffer, currentOffer]} isMainMap={false} activeOffer={currentOffer}
             />
           </section>
           <div className="container">

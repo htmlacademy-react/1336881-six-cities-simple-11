@@ -7,12 +7,12 @@ import { useAppDispath } from '../../hooks/useAppDispatch';
 import React from 'react';
 
 
-function Auth({logoutHandler}:{logoutHandler: (e:React.SyntheticEvent<HTMLAnchorElement>) => void}) {
-  const { authorizationStatus} = useAppSelector((state) => state);
+function Auth({handleLogout}:{handleLogout: (e:React.SyntheticEvent<HTMLAnchorElement>) => void}) {
+  const { authorizationStatus} = useAppSelector((state) => ({...state.user}));
   return (
     authorizationStatus === AuthorizationStatus.Auth ?
       <li className="header__nav-item">
-        <a className="header__nav-link" href="#" onClick={logoutHandler}>
+        <a className="header__nav-link" href="#" onClick={handleLogout}>
           <span className="header__signout">Sign out</span>
         </a>
       </li> :
@@ -27,11 +27,11 @@ function Auth({logoutHandler}:{logoutHandler: (e:React.SyntheticEvent<HTMLAnchor
 
 
 function Header() {
-  const { authorizationStatus, user, isLoading} = useAppSelector((state) => state);
+  const { authorizationStatus, user, isLoading} = useAppSelector((state) => ({...state.user, ...state.offers}));
 
   const dispath = useAppDispath();
 
-  const logoutHandler = (e:React.SyntheticEvent<HTMLAnchorElement>) => {
+  const handleLogout = (e:React.SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     dispath(logoutAction());
   };
@@ -64,7 +64,7 @@ function Header() {
                     </span>
                   </div>
                 </li> : null}
-              {!isLoading && <Auth logoutHandler={logoutHandler}/>}
+              {!isLoading && <Auth handleLogout={handleLogout}/>}
             </ul>
           </nav>
         </div>

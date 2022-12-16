@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispath } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { handleSortPriceUpAction, handleSortPriceDownAction, handleSortRatingAction, handleSortPopularAction } from '../../store/offers-process/offers-process';
 import './sort-offers.css';
-import {handleSortPriceUpAction , handleSortPriceDownAction, handleSortRatingAction, handleSortPopularAction} from '../../store/actions';
 
 
 function SortOffers(){
 
+
+  const {currentCity} = useAppSelector((state) => ({...state.offers}));
+  const dispath = useAppDispath();
+
   const [isOpen, setIsOpen] = useState(false);
   const [activeSort, setActiveSort] = useState('popular');
+
+  useEffect(() => {
+    setActiveSort('popular');
+    setIsOpen(false);
+  }, [currentCity]);
 
   const clickHandler = () => {
     setIsOpen(!isOpen);
@@ -36,8 +46,6 @@ function SortOffers(){
     setActiveSort(sort);
     dispath(handleSortPopularAction());
   };
-
-  const dispath = useAppDispath();
 
   return (
     <form className={`places__sorting ${isOpen ? 'isOpen' : ''}`} action="#" method="get">
