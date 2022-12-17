@@ -25,7 +25,7 @@ export function validatePassword(str:string) {
   const result = regNumber.test(str) && (regLower.test(str) || regUpper.test(str));
 
   if(!result) {
-    toast.warn('invalid password');
+    toast.warn('invalid password, the password must have an uppercase, lowercase and a number');
   }
 
   return result;

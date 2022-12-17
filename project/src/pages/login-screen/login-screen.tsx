@@ -26,7 +26,7 @@ function LoginScreen () {
   const handleSubmitForm = (e:React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if(passwordValue.length <= 1) {
-      toast.warn('your pw < 1');
+      toast.warn('password must be more than 1 character');
       return;
     }
 

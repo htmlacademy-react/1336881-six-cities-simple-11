@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAppDispath } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { handleSortPriceUpAction, handleSortPriceDownAction, handleSortRatingAction, handleSortPopularAction } from '../../store/offers-process/offers-process';
@@ -23,30 +23,37 @@ function SortOffers(){
     setIsOpen(!isOpen);
   };
 
-  const changeSortLowToUpHandler = (sort: string) => {
-    setIsOpen(!isOpen);
-    setActiveSort(sort);
-    dispath(handleSortPriceUpAction());
-  };
+  const changeSortLowToUpHandler = useCallback(
+    (sort: string) => {
+      setIsOpen(!isOpen);
+      setActiveSort(sort);
+      dispath(handleSortPriceUpAction());
+    }, [dispath, isOpen]
+  );
 
-  const changeSortHighToLowHandler = (sort: string) => {
-    setIsOpen(!isOpen);
-    setActiveSort(sort);
-    dispath(handleSortPriceDownAction());
-  };
+  const changeSortHighToLowHandler = useCallback(
+    (sort: string) => {
+      setIsOpen(!isOpen);
+      setActiveSort(sort);
+      dispath(handleSortPriceDownAction());
+    }, [dispath, isOpen]
+  );
 
-  const changeSortRatingHandler = (sort: string) => {
-    setIsOpen(!isOpen);
-    setActiveSort(sort);
-    dispath(handleSortRatingAction());
-  };
+  const changeSortRatingHandler = useCallback(
+    (sort: string) => {
+      setIsOpen(!isOpen);
+      setActiveSort(sort);
+      dispath(handleSortRatingAction());
+    }, [dispath, isOpen]
+  );
 
-  const changeSortPopularHandler = (sort: string) => {
-    setIsOpen(!isOpen);
-    setActiveSort(sort);
-    dispath(handleSortPopularAction());
-  };
-
+  const changeSortPopularHandler = useCallback(
+    (sort: string) => {
+      setIsOpen(!isOpen);
+      setActiveSort(sort);
+      dispath(handleSortPopularAction());
+    }, [dispath, isOpen]
+  );
   return (
     <form className={`places__sorting ${isOpen ? 'isOpen' : ''}`} action="#" method="get">
       <span className="places__sorting-caption">Sort by </span>
