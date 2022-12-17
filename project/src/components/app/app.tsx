@@ -2,7 +2,6 @@ import {Route, BrowserRouter, Routes} from 'react-router-dom';
 import {AppRoute} from '../../const';
 import MainScreen from '../../pages/main-screen/main-screen';
 import LoginScreen from '../../pages/login-screen/login-screen';
-// import DetailScreenNotAuth from '../../pages/detail-screen-not-auth/detail-screen-not-auth';
 import OfferScreen from '../../pages/offer-screen/offer-screen';
 import NotFoundScreen from '../../pages/not-found-screen/not-found-screen';
 
